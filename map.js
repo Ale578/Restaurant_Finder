@@ -2,39 +2,64 @@ let map;
 let lat;
 let lng;
 let currentMarker = null;
+let currentCircle = null;
+let radius = 500;
 
 async function initMap() {
-    const { Map } = await google.maps.importLibrary("maps");
+    const { Map } = await google.maps.importLibrary('maps');
+    const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
+    const { Circle } = await google.maps.importLibrary('maps')
 
-    map = new Map(document.getElementById("map"), {
+    map = new Map(document.getElementById('map'), {
+        mapId: '608aeffcc45faef9',
         center: { lat: 40.961613, lng: -5.667607 },
-        zoom: 14,
+        zoom: 14
     });
 
     const service = new google.maps.places.PlacesService(map);
 
-    map.addListener("click", (event) => {
-
+    map.addListener('click', (event) => {
 
         const clickedLocation = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng()
         };
 
-        addMarker(clickedLocation)
-        getRestaurants(service, clickedLocation, 500)
+        addMarker(clickedLocation, AdvancedMarkerElement )
+        addCircle(clickedLocation, radius)
+        getRestaurants(service, clickedLocation, radius)
     });
 }
 
-function addMarker(location) {
+function addMarker(location, AdvancedMarkerElement) {
+
     if (currentMarker) {
         currentMarker.setMap(null);
     }
-    currentMarker = new google.maps.Marker({
+
+    currentMarker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
-        map: map
+        map: map,
+        title: 'Selected Location'
     });
     // markers.push(marker)
+}
+
+function addCircle(location, radius) {
+    if (currentCircle) {
+        currentCircle.setMap(null);
+    }
+
+    currentCircle = new google.maps.Circle({
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35,
+        map: map,
+        center: location,
+        radius: radius
+    });
 }
 
 function getRestaurants(service, location, radius) {
@@ -64,7 +89,7 @@ function displayResults(results) {
     }
 
     results.forEach((place) => {
-        if (place.rating >= 4.0) {
+        if (place.rating >= 3.0) {
 
             const row = tableBody.insertRow();
 

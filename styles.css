@@ -4,7 +4,8 @@
  */
  #map {
     height: 50%;
-    margin: 50px;
+    margin: 20px;
+
   }
   
   /* 
@@ -17,6 +18,11 @@
     padding: 0;
   }
 
+  table {
+    margin: 20px;
+  }
+  
   td {
-    padding: 5px;
+    padding: 8px;
+    text-align: center;
   }
