@@ -1,6 +1,7 @@
 let map;
 let lat;
 let lng;
+let currentMarker = null;
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary("maps");
@@ -13,13 +14,27 @@ async function initMap() {
     const service = new google.maps.places.PlacesService(map);
 
     map.addListener("click", (event) => {
+
+
         const clickedLocation = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng()
         };
+
+        addMarker(clickedLocation)
         getRestaurants(service, clickedLocation, 500)
-        displayResults(results)
     });
+}
+
+function addMarker(location) {
+    if (currentMarker) {
+        currentMarker.setMap(null);
+    }
+    currentMarker = new google.maps.Marker({
+        position: location,
+        map: map
+    });
+    // markers.push(marker)
 }
 
 function getRestaurants(service, location, radius) {
