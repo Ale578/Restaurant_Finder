@@ -4,6 +4,8 @@ let lng;
 let currentMarker = null;
 let currentCircle = null;
 let radius = 500;
+let service;
+let clickedLocation;
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
@@ -16,20 +18,31 @@ async function initMap() {
         zoom: 14
     });
 
-    const service = new google.maps.places.PlacesService(map);
+    service = new google.maps.places.PlacesService(map);
 
     map.addListener('click', (event) => {
 
-        const clickedLocation = {
+        clickedLocation = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng()
         };
 
         addMarker(clickedLocation, AdvancedMarkerElement )
-        addCircle(clickedLocation, radius)
-        getRestaurants(service, clickedLocation, radius)
+        addCircle(clickedLocation, radius);
     });
 }
+
+let search = document.querySelector('#search');
+
+search.addEventListener('click', () => {
+    if (currentMarker) {
+        addCircle(clickedLocation, radius);
+        getRestaurants(service, clickedLocation, radius);
+    } else {
+        alert('Select a location')
+    }
+});
+
 
 function addMarker(location, AdvancedMarkerElement) {
 
@@ -55,9 +68,10 @@ function addCircle(location, radius) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: '#FF0000',
-        fillOpacity: 0.35,
+        fillOpacity: 0.1,
         map: map,
         center: location,
+
         radius: radius
     });
 }
