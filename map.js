@@ -32,6 +32,19 @@ async function initMap() {
     });
 }
 
+let radiusSlider = document.querySelector('#radiusSlider');
+let radiusValue = document.querySelector('#radiusValue');
+
+radiusSlider.addEventListener('input', () => {
+
+    radius = parseInt(radiusSlider.value)
+    radiusValue.textContent = radius;
+
+    if (currentCircle) {
+        currentCircle.setRadius(radius)
+    }
+});
+
 let search = document.querySelector('#search');
 
 search.addEventListener('click', () => {

@@ -7,12 +7,18 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     
     <link rel="stylesheet" type="text/css" href="styles.css" />
-    <script src="map.js"></script>
+    <script src="map.js" defer></script>
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 </head>
 <body>
     <div id="map">
     </div>
+    <button id="search">Search</button>
+
+    <input type="range" id="radiusSlider" min="100" max="1000" value="500" step="100">
+
+    <span id="radiusValue">500</span> meters
+
     <table id="results">
         <thead>
             <tr>
@@ -24,7 +30,6 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
 
     </table>
