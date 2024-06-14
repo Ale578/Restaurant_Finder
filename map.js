@@ -5,12 +5,12 @@ let currentMarker = null;
 let currentCircle = null;
 let radius = 500;
 let service;
-let clickedLocation;
+let selectedLocation;
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
     const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
-    const { Circle } = await google.maps.importLibrary('maps')
+    // const { Circle } = await google.maps.importLibrary('maps')
 
     map = new Map(document.getElementById('map'), {
         mapId: '608aeffcc45faef9',
@@ -22,13 +22,13 @@ async function initMap() {
 
     map.addListener('click', (event) => {
 
-        clickedLocation = {
+        selectedLocation = {
             lat: event.latLng.lat(),
             lng: event.latLng.lng()
         };
 
-        addMarker(clickedLocation, AdvancedMarkerElement )
-        addCircle(clickedLocation, radius);
+        addMarker(selectedLocation, AdvancedMarkerElement )
+        addCircle(selectedLocation, radius);
     });
 }
 
@@ -49,8 +49,8 @@ let search = document.querySelector('#search');
 
 search.addEventListener('click', () => {
     if (currentMarker) {
-        addCircle(clickedLocation, radius);
-        getRestaurants(service, clickedLocation, radius);
+        addCircle(selectedLocation, radius);
+        getRestaurants(service, selectedLocation, radius);
     } else {
         alert('Select a location')
     }
@@ -58,7 +58,6 @@ search.addEventListener('click', () => {
 
 
 function addMarker(location, AdvancedMarkerElement) {
-
     if (currentMarker) {
         currentMarker.setMap(null);
     }
@@ -84,7 +83,6 @@ function addCircle(location, radius) {
         fillOpacity: 0.1,
         map: map,
         center: location,
-
         radius: radius
     });
 }
@@ -107,6 +105,33 @@ function getRestaurants(service, location, radius) {
     });
 }
 
+let locateMe = document.querySelector('#locateMe');
+locateMe.addEventListener('click', () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            selectedLocation = {
+                lat: latitude,
+                lng: longitude
+            }
+            const { AdvancedMarkerElement } = google.maps.importLibrary('marker');
+    
+            addMarker(selectedLocation, AdvancedMarkerElement);
+            addCircle(selectedLocation, radius);
+          },
+          (error) => {
+            console.error('Error Code = ' + error.code + ' - ' + error.message);
+          }
+        );
+      } 
+    else {
+        console.error('Geolocation is not supported by this browser.');
+    }
+
+});
+
 function displayResults(results) {
     const tableBody = document.querySelector('#results tbody');
 
@@ -116,7 +141,7 @@ function displayResults(results) {
     }
 
     results.forEach((place) => {
-        if (place.rating >= 3.0) {
+        if (place.rating >= 3.5) {
 
             const row = tableBody.insertRow();
 
@@ -130,6 +155,8 @@ function displayResults(results) {
             cellRating.textContent = place.rating;
             cellTotalRatings.textContent = place.user_ratings_total;
             cellPriceLevel.textContent = place.price_level;
+
+
             cellUrl.innerHTML = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
 
             // <a href="${placeUrl}" target="_blank">Google Maps</a>
