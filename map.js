@@ -117,7 +117,8 @@ locateMe.addEventListener('click', () => {
                 lng: longitude
             }
             const { AdvancedMarkerElement } = google.maps.importLibrary('marker');
-    
+
+            map.panTo(selectedLocation);
             addMarker(selectedLocation, AdvancedMarkerElement);
             addCircle(selectedLocation, radius);
           },
