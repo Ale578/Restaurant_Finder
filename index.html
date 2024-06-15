@@ -11,8 +11,24 @@
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 </head>
 <body>
-    <div id="map">
+    <div id="settingsPopup">
+        <div class="overlay"></div>
+        <div class="content"></div>
+        <div class="close-btn" onclick="togglePopup()">&times;</div>
     </div>
+
+    <h1>Settings</h1>
+
+    <div id="orderyBy"></div>
+        <h2>Order the results by:</h2>
+        <button class="order" id="Rating">Rating</button>
+        <button class="order" id="NumberOfRatings">Number of ratings</button>
+        <button class="order" id="PriceLevel">Price level</button>
+    </div>  
+    <br>
+    <button onclick="togglePopup()">Settings</button>
+
+    <div id="map"></div>
     <button id="search">Search</button>
 
     <input type="range" id="radiusSlider" min="200" max="1500" value="500" step="100">
@@ -26,7 +42,7 @@
             <tr>
                 <td>Name</td>
                 <td>Rating</td>
-                <td>Total ratings</td>
+                <td>Number of ratings</td>
                 <td>Price level</td>
                 <td>Directions</td>
             </tr>

@@ -8,7 +8,7 @@ let service;
 let selectedLocation;
 let minimum_rating = 3.5;
 
-let orderBy = 'rating'
+let orderBy = 'rating';
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
@@ -89,6 +89,20 @@ function addCircle(location, radius) {
     });
 }
 
+// Order results by specified field
+let selectOrderBy = document.querySelectorAll('.order');
+selectOrderBy.forEach(button => {
+    button.addEventListener('click', event => {
+        if (event.target.textContent == 'Rating') {
+            orderBy = 'rating';
+        } else if (event.target.textContent == 'Number of ratings') {
+            orderBy = 'user_ratings_total';
+        } else if (event.target.textContent == 'Price level') {
+            orderBy = 'price_level';
+        }
+    });    
+});
+
 function getRestaurants(service, location, radius) {
     // Define the search request
     const request = {
@@ -142,8 +156,22 @@ function displayResults(results, orderBy) {
         tableBody.removeChild(tableBody.firstChild);
     }
 
+    if (orderBy == 'price_level') {
+        let i = 0;
+        results.forEach((place) => {
+            if (!place.price_level) {
+                place.price_level = 0;
+                let tmp = place;
+                results.splice(i, 1);
+                results.push(tmp);
+            }   
+            i++
+        });
+    }
+
     // Order results based on the user's input, orderBy
     results.sort((a, b) => b[orderBy] - a[orderBy]);
+
 
     results.forEach((place) => {
         if (place.rating >= minimum_rating) {
@@ -159,7 +187,12 @@ function displayResults(results, orderBy) {
             cellName.textContent = place.name;
             cellRating.textContent = place.rating;
             cellTotalRatings.textContent = place.user_ratings_total;
-            cellPriceLevel.textContent = place.price_level;
+            if (place.price_level == 0) {
+                cellPriceLevel.textContent = 'N/A';
+            }
+            else {
+                cellPriceLevel.textContent = place.price_level;
+            }
 
 
             cellUrl.innerHTML = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
@@ -168,6 +201,10 @@ function displayResults(results, orderBy) {
 
         }
     });
+}
+
+function togglePopup() {
+    document.querySelector('#popup').classList.toggle('active');
 }
 
 // Initialize the map on window load
