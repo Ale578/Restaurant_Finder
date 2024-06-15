@@ -6,6 +6,9 @@ let currentCircle = null;
 let radius = 500;
 let service;
 let selectedLocation;
+let minimum_rating = 3.5;
+
+let orderBy = 'rating'
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
@@ -67,7 +70,6 @@ function addMarker(location, AdvancedMarkerElement) {
         map: map,
         title: 'Selected Location'
     });
-    // markers.push(marker)
 }
 
 function addCircle(location, radius) {
@@ -97,8 +99,7 @@ function getRestaurants(service, location, radius) {
     // Use the nearbySearch method to search for restaurants
     service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-            console.log(results);
-            displayResults(results);
+            displayResults(results, orderBy);
         } else {
             console.error('Places service failed due to: ' + status);
         }
@@ -133,7 +134,7 @@ locateMe.addEventListener('click', () => {
 
 });
 
-function displayResults(results) {
+function displayResults(results, orderBy) {
     const tableBody = document.querySelector('#results tbody');
 
     // Clear any previous results
@@ -141,8 +142,11 @@ function displayResults(results) {
         tableBody.removeChild(tableBody.firstChild);
     }
 
+    // Order results based on the user's input, orderBy
+    results.sort((a, b) => b[orderBy] - a[orderBy]);
+
     results.forEach((place) => {
-        if (place.rating >= 3.5) {
+        if (place.rating >= minimum_rating) {
 
             const row = tableBody.insertRow();
 
@@ -161,7 +165,6 @@ function displayResults(results) {
             cellUrl.innerHTML = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
 
             // <a href="${placeUrl}" target="_blank">Google Maps</a>
-            
 
         }
     });
