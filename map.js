@@ -6,9 +6,13 @@ let currentCircle = null;
 let radius = 500;
 let service;
 let selectedLocation;
-let minimum_rating;
 
+let previousSelectedLocation;
+
+let minimum_rating = 3.5;
 let orderBy = 'rating';
+
+let restaurantMarkers = [];
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
@@ -52,7 +56,18 @@ let search = document.querySelector('#search');
 
 search.addEventListener('click', () => {
     if (currentMarker) {
-        addCircle(selectedLocation, radius);
+
+        // Idea to potentially change reduce the amount of requests if the search location is the same as the previous one and the radius are the same
+
+        // if ((currentMarker.position.Gg == previousSelectedLocation.lat) && (currentMarker.position.Hg == previousSelectedLocation.lng)) {
+        //     console.log()
+        // }
+
+
+        // console.log(selectedLocation);
+        // console.log(currentMarker.position);
+
+        // addCircle(selectedLocation, radius);
         getRestaurants(service, selectedLocation, radius);
     } else {
         alert('Select a location')
@@ -126,9 +141,6 @@ selectMinimumRating.addEventListener('change', () => {
 });
 
 
-
-
-
 function getRestaurants(service, location, radius) {
     // Define the search request
     const request = {
@@ -136,14 +148,51 @@ function getRestaurants(service, location, radius) {
         radius: radius,
         type: ['restaurant']
     };
+
+    clearRestaurantMarkers();
+
     // Use the nearbySearch method to search for restaurants
     service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             displayResults(results, orderBy);
+            
+            // Add restaurantMarkers
+            results.forEach((place) => {
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+
+                const icon = {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: 'rgba(0, 0, 255, 0.2)', // Blue color with transparency
+                    fillOpacity: 0.4,
+                    scale: 10, 
+                    strokeColor: 'blue',
+                    strokeWeight: 1
+                };
+
+                // Add a marker for each restaurant
+                const marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: place.name,
+                    icon: icon
+                });
+
+                // Store marker in markers array
+               restaurantMarkers.push(marker);
+            });
+
         } else {
             console.error('Places service failed due to: ' + status);
         }
     });
+}
+
+function clearRestaurantMarkers() {
+    restaurantMarkers.forEach(marker => {
+        marker.setMap(null);
+    });
+    restaurantMarkers = [];
 }
 
 let locateMe = document.querySelector('#locateMe');
@@ -226,11 +275,12 @@ function displayResults(results, orderBy) {
 
         }
     });
+    console.log(results);
 }
 
-function togglePopup() {
-    document.querySelector('#popup').classList.toggle('active');
-}
+// function togglePopup() {
+//     document.querySelector('#popup').classList.toggle('active');
+// }
 
 // Initialize the map on window load
 window.onload = initMap;
