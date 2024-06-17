@@ -6,7 +6,7 @@ let currentCircle = null;
 let radius = 500;
 let service;
 let selectedLocation;
-let minimum_rating = 3.5;
+let minimum_rating;
 
 let orderBy = 'rating';
 
@@ -103,6 +103,32 @@ selectOrderBy.forEach(button => {
     });    
 });
 
+let selectMinimumRating = document.querySelector('#minimumRating');
+
+// Filter out results by rating
+document.addEventListener('DOMContentLoaded', () => {
+
+    for (let i = 50; i >= 30; i--) {
+        let option = document.createElement('option');
+        option.value = (i / 10).toFixed(1);
+        option.text = (i / 10).toFixed(1);
+
+        if (option.value === '3.5') {
+            option.selected = true;
+        }
+    
+        selectMinimumRating.appendChild(option);
+    }
+});
+
+selectMinimumRating.addEventListener('change', () => {
+    minimum_rating = selectMinimumRating.value;
+});
+
+
+
+
+
 function getRestaurants(service, location, radius) {
     // Define the search request
     const request = {
@@ -155,24 +181,22 @@ function displayResults(results, orderBy) {
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
-
-    if (orderBy == 'price_level') {
-        let i = 0;
-        results.forEach((place) => {
-            if (!place.price_level) {
-                place.price_level = 0;
-                let tmp = place;
-                results.splice(i, 1);
-                results.push(tmp);
-            }   
-            i++
-        });
-    }
+    
+    let i = 0;
+    results.forEach((place) => {
+        if (!place.price_level) {
+            place.price_level = 0;
+            let tmp = place;
+            results.splice(i, 1);
+            results.push(tmp);
+        }   
+        i++
+    });
 
     // Order results based on the user's input, orderBy
     results.sort((a, b) => b[orderBy] - a[orderBy]);
 
-
+    // display the ordered results
     results.forEach((place) => {
         if (place.rating >= minimum_rating) {
 
@@ -187,6 +211,7 @@ function displayResults(results, orderBy) {
             cellName.textContent = place.name;
             cellRating.textContent = place.rating;
             cellTotalRatings.textContent = place.user_ratings_total;
+
             if (place.price_level == 0) {
                 cellPriceLevel.textContent = 'N/A';
             }
