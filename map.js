@@ -156,32 +156,6 @@ function getRestaurants(service, location, radius) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             displayResults(results, orderBy);
             
-            // Add restaurantMarkers
-            results.forEach((place) => {
-                const lat = place.geometry.location.lat();
-                const lng = place.geometry.location.lng();
-
-                const icon = {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    fillColor: 'rgba(0, 0, 255, 0.2)', // Blue color with transparency
-                    fillOpacity: 0.4,
-                    scale: 10, 
-                    strokeColor: 'blue',
-                    strokeWeight: 1
-                };
-
-                // Add a marker for each restaurant
-                const marker = new google.maps.Marker({
-                    position: { lat: lat, lng: lng },
-                    map: map,
-                    title: place.name,
-                    icon: icon
-                });
-
-                // Store marker in markers array
-               restaurantMarkers.push(marker);
-            });
-
         } else {
             console.error('Places service failed due to: ' + status);
         }
@@ -270,6 +244,31 @@ function displayResults(results, orderBy) {
 
 
             cellUrl.innerHTML = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
+
+            // Add restaurantMarkers
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+
+            const icon = {
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor: 'rgba(0, 0, 255, 0.2)', // Blue color with transparency
+                fillOpacity: 0.4,
+                scale: 10, 
+                strokeColor: 'blue',
+                strokeWeight: 1
+            };
+
+            // Add a marker for each restaurant
+            const marker = new google.maps.Marker({
+                position: { lat: lat, lng: lng },
+                map: map,
+                title: place.name,
+                icon: icon
+            });
+
+            // Store marker in markers array
+            restaurantMarkers.push(marker);
+
 
             // <a href="${placeUrl}" target="_blank">Google Maps</a>
 
