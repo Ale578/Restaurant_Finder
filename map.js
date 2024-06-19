@@ -3,7 +3,7 @@ let lat;
 let lng;
 let currentMarker = null;
 let currentCircle = null;
-let radius = 500;
+let radius = 700;
 let service;
 let selectedLocation;
 
@@ -68,6 +68,7 @@ search.addEventListener('click', () => {
         // console.log(currentMarker.position);
 
         // addCircle(selectedLocation, radius);
+
         getRestaurants(service, selectedLocation, radius);
     } else {
         alert('Select a location')
@@ -110,6 +111,8 @@ selectOrderBy.forEach(button => {
     button.addEventListener('click', event => {
         if (event.target.textContent == 'Rating') {
             orderBy = 'rating';
+        } else if (event.target.textContent == 'Distance') {
+            orderBy = 'distance';
         } else if (event.target.textContent == 'Number of ratings') {
             orderBy = 'user_ratings_total';
         } else if (event.target.textContent == 'Price level') {
@@ -204,16 +207,41 @@ function displayResults(results, orderBy) {
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
-    
-    let i = 0;
-    results.forEach((place) => {
+
+
+    let noPrice = [];
+
+    console.log(results);
+    // console.log(results[1]);
+
+    for (let i = 0; i < results.length; i++) {
+        const place = results[i];
+
+        // console.log(`Processing place: ${place.name}`);
+
+        // Get distance from the selected location to the restaurants
+        const placeLocation = new google.maps.LatLng(
+            place.geometry.location.lat(),
+            place.geometry.location.lng()
+        );
+
+        const selectedLatLng = new google.maps.LatLng(
+            selectedLocation.lat,
+            selectedLocation.lng
+        );
+        
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(selectedLatLng, placeLocation);
+        place.distance = distance * -1;
+
+        console.log(`${i}. ${place.name} distance: ${place.distance}`);
+
         if (!place.price_level) {
             place.price_level = 0;
-            let tmp = place;
-            results.splice(i, 1);
-            results.push(tmp);
         }   
-        i++
+    };
+
+    noPrice.forEach((place) => {
+        results.push(place);
     });
 
     // Order results based on the user's input, orderBy
@@ -234,7 +262,6 @@ function displayResults(results, orderBy) {
             cellName.textContent = place.name;
             cellRating.textContent = place.rating;
             cellTotalRatings.textContent = place.user_ratings_total;
-
             if (place.price_level == 0) {
                 cellPriceLevel.textContent = 'N/A';
             }
@@ -244,6 +271,9 @@ function displayResults(results, orderBy) {
 
 
             cellUrl.innerHTML = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
+
+            // <a href="${placeUrl}" target="_blank">Google Maps</a>
+
 
             // Add restaurantMarkers
             const lat = place.geometry.location.lat();
@@ -268,13 +298,9 @@ function displayResults(results, orderBy) {
 
             // Store marker in markers array
             restaurantMarkers.push(marker);
-
-
-            // <a href="${placeUrl}" target="_blank">Google Maps</a>
-
         }
     });
-    console.log(results);
+    // console.log(results);
 }
 
 // function togglePopup() {
