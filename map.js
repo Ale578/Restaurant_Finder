@@ -3,11 +3,13 @@ let lat;
 let lng;
 let currentMarker = null;
 let currentCircle = null;
-let radius = 700;
+let radius = 500;
 let service;
 let selectedLocation;
 
 let previousSelectedLocation;
+
+let previousRadius = 0;
 
 let minimum_rating = 3.5;
 let orderBy = 'rating';
@@ -57,11 +59,29 @@ let search = document.querySelector('#search');
 search.addEventListener('click', () => {
     if (currentMarker) {
 
-        // Idea to potentially change reduce the amount of requests if the search location is the same as the previous one and the radius are the same
+        if (!previousSelectedLocation) {
+            getRestaurants(service, selectedLocation, radius);
+            // alert("First serach");
+        } else {
+            if ((selectedLocation.lat == previousSelectedLocation.lat) 
+                && (selectedLocation.lng == previousSelectedLocation.lng)
+                && (radius == previousRadius)) {
+                alert("You already searched for this");
 
-        // if ((currentMarker.position.Gg == previousSelectedLocation.lat) && (currentMarker.position.Hg == previousSelectedLocation.lng)) {
-        //     console.log()
-        // }
+                // displayResults(results, orderBy)
+
+            } else {
+                console.log(radius);
+                console.log(previousRadius);
+                console.log(previousSelectedLocation);
+                getRestaurants(service, selectedLocation, radius);
+                // alert("Different search");
+
+            }        
+        }
+    previousSelectedLocation = selectedLocation;
+
+        // Idea to potentially change reduce the amount of requests if the search location is the same as the previous one and the radius are the same
 
 
         // console.log(selectedLocation);
@@ -69,7 +89,7 @@ search.addEventListener('click', () => {
 
         // addCircle(selectedLocation, radius);
 
-        getRestaurants(service, selectedLocation, radius);
+
     } else {
         alert('Select a location')
     }
@@ -158,6 +178,8 @@ function getRestaurants(service, location, radius) {
     service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
             displayResults(results, orderBy);
+
+            previousRadius = radius;
             
         } else {
             console.error('Places service failed due to: ' + status);
@@ -262,6 +284,7 @@ function displayResults(results, orderBy) {
             cellName.textContent = place.name;
             cellRating.textContent = place.rating;
             cellTotalRatings.textContent = place.user_ratings_total;
+            
             if (place.price_level == 0) {
                 cellPriceLevel.textContent = 'N/A';
             }
@@ -300,12 +323,7 @@ function displayResults(results, orderBy) {
             restaurantMarkers.push(marker);
         }
     });
-    // console.log(results);
 }
-
-// function togglePopup() {
-//     document.querySelector('#popup').classList.toggle('active');
-// }
 
 // Initialize the map on window load
 window.onload = initMap;
