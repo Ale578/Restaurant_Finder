@@ -82,15 +82,6 @@ search.addEventListener('click', () => {
         }
     previousSelectedLocation = selectedLocation;
 
-        // Idea to potentially change reduce the amount of requests if the search location is the same as the previous one and the radius are the same
-
-
-        // console.log(selectedLocation);
-        // console.log(currentMarker.position);
-
-        // addCircle(selectedLocation, radius);
-
-
     } else {
         alert('Select a location')
     }
@@ -145,7 +136,7 @@ selectOrderBy.forEach(button => {
 
 let selectMinimumRating = document.querySelector('#minimumRating');
 
-// Filter out results by rating
+// Set up filter by minimum rating
 document.addEventListener('DOMContentLoaded', () => {
 
     for (let i = 50; i >= 30; i--) {
@@ -213,7 +204,11 @@ function getRestaurants(service, location, radius) {
             previousRadius = radius;
 
         } else {
-            console.error('Places service failed due to: ' + status);
+            // Handle if there are no results in the area
+            if (status == 'ZERO_RESULTS') {
+                alert('No results, please try a different area or increase the radius');
+                console.error('Places service failed due to: ' + status);
+            }
         }
     });
 }
@@ -262,7 +257,7 @@ function displayResultsTable(results, orderBy, minimum_rating) {
 function displayResultsMap(results, minimum_rating) {
 
     clearRestaurantMarkers()
-    
+
     results.forEach((place) => {
         if (place.rating >= minimum_rating) {
             // Add restaurantMarkers
