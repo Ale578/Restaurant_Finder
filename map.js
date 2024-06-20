@@ -286,10 +286,38 @@ function displayResultsMap(results, minimum_rating) {
                 icon: icon
             });
 
+            marker.addListener('click', () => {
+
+                const highlightedIcon = {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: 'blue',
+                    fillOpacity: 1,    // No transparency
+                    scale: 10, 
+                    strokeColor: 'blue',
+                    strokeWeight: 1
+                };
+
+                // Reset previously highlighted marker
+                restaurantMarkers.forEach((marker) => {
+                    if (marker.getIcon().fillColor === highlightedIcon.fillColor) {
+                        marker.setIcon(icon);
+                    }
+                });
+
+                marker.setIcon(highlightedIcon);
+                // alert(`You clicked on: ${place.name}`);
+            });
+
             // Store marker in markers array
             restaurantMarkers.push(marker);
         }
     });
+
+    // restaurantMarkers.forEach((marker) => {
+    //     marker.addEventListener('click', () => {
+
+    //     });
+    // });
 }
 
 function clearRestaurantMarkers() {
@@ -325,8 +353,9 @@ locateMe.addEventListener('click', () => {
     else {
         console.error('Geolocation is not supported by this browser.');
     }
-
 });
+
+
 
 // Initialize the map on window load
 window.onload = initMap;
