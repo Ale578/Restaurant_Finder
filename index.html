@@ -11,52 +11,48 @@
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 </head>
 <body>
-    <div id="settingsPopup">
-        <div class="overlay"></div>
-        <div class="content"></div>
-        <div class="close-btn" onclick="togglePopup()">&times;</div>
+    <div id="leftPanel">
+        <div id="map"></div>
+
+        <div id="options">
+            <button id="search">Search</button>
+
+            <h4>Order the results by:</h4>
+            <div id="orderBy">
+                <button class="order" id="Rating">Rating</button>
+                <button class="order" id="Distance">Distance</button>
+                <button class="order" id="PriceLevel">Price level</button>
+                <button class="order" id="NumberOfRatings">Number of ratings</button>
+            </div>
+    
+            <h4>The minimum restaurant rating:</h4>
+            <select id="minimumRating"></select>
+
+            <br>
+
+            <input type="range" id="radiusSlider" min="200" max="1500" value="500" step="100">
+            <span id="radiusValue">500</span> meters
+
+            <button id="locateMe">Locate me</button>
+        </div>
     </div>
 
-    <h1>Settings</h1>
 
-    <h2>Order the results by:</h2>
-    <div id="orderyBy"></div>
-        <button class="order" id="Rating">Rating</button>
-        <button class="order" id="Distance">Distance</button>
-        <button class="order" id="PriceLevel">Price level</button>
-        <button class="order" id="NumberOfRatings">Number of ratings</button>
-
-        
+    <div id="rightPanel">
+        <table id="results">
+            <thead>
+                <tr>
+                    <td>Name</td>
+                    <td>Rating</td>
+                    <td>Number of ratings</td>
+                    <td>Price level</td>
+                    <td>Directions</td>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-
-    <h2>The minimum restaurant rating:</h2>
-    <select id="minimumRating"></select>
-    <br>
-    <button onclick="togglePopup()">Settings</button>
-
-    <div id="map"></div>
-    <button id="search">Search</button>
-
-    <input type="range" id="radiusSlider" min="200" max="1500" value="500" step="100">
-
-    <span id="radiusValue">500</span> meters
-
-    <button id="locateMe">Locate me</button>
-
-    <table id="results">
-        <thead>
-            <tr>
-                <td>Name</td>
-                <td>Rating</td>
-                <td>Number of ratings</td>
-                <td>Price level</td>
-                <td>Directions</td>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-
-    </table>
     <script async
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3nRkuPgmEKK5q5snapu3Frlz19xQWjvU&libraries=places&loading=async&callback=initMap">
     </script>

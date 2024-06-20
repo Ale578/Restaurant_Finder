@@ -1,28 +1,49 @@
-/* 
- * Always set the map height explicitly to define the size of the div element
- * that contains the map. 
- */
- #map {
-    height: 50%;
-    margin: 20px;
+body {
+    display: flex;
+}
 
-  }
-  
-  /* 
-   * Optional: Makes the sample page fill the window. 
-   */
-  html,
-  body {
+#map {
     height: 100%;
+    width: 100%;
+}
+
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+    /* height: 100%; */
     margin: 0;
     padding: 0;
-  }
+}
 
-  table {
-    margin: 20px;
-  }
-  
-  td {
+#leftPanel {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    height: 100vh;
+    width: 50%;
+}
+
+#options {
+    width: 100%;
+}
+
+#search {
+    float: right;
+    padding: 10px;
+}
+
+#rightPanel {
+    width: 50%;
+}
+
+table {
+    margin: 10px;
+    width: 100%;
+}
+
+td {
     padding: 8px;
     text-align: center;
-  }
+}

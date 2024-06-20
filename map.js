@@ -16,6 +16,7 @@ let orderBy = 'rating';
 let restaurantMarkers = [];
 
 let restaurantResults;
+const tableBody = document.querySelector('#results tbody');
 
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
@@ -203,10 +204,14 @@ function getRestaurants(service, location, radius) {
             // Store value of the previous radius
             previousRadius = radius;
 
-        } else {
-            // Handle if there are no results in the area
+        } else { // Handle if there are no results in the area
+            
+            // Clear any previous results
+            while (tableBody.firstChild) {
+                tableBody.removeChild(tableBody.firstChild);
+            }
+
             if (status == 'ZERO_RESULTS') {
-                alert('No results, please try a different area or increase the radius');
                 console.error('Places service failed due to: ' + status);
             }
         }
@@ -214,13 +219,11 @@ function getRestaurants(service, location, radius) {
 }
 
 function displayResultsTable(results, orderBy, minimum_rating) {
-    const tableBody = document.querySelector('#results tbody');
 
     // Clear any previous results
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
-    // console.log(results);
 
     // Order results based on the user's input, orderBy
     results.sort((a, b) => b[orderBy] - a[orderBy]);
@@ -248,8 +251,10 @@ function displayResultsTable(results, orderBy, minimum_rating) {
                 cellPriceLevel.textContent = place.price_level;
             }
 
-            cellUrl.innerHTML = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
-            // <a href="${placeUrl}" target="_blank">Google Maps</a>
+            let placeUrl = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
+
+            cellUrl.innerHTML = `<a href="${placeUrl}" target="_blank">Google Maps</a>`;
+
         }
     });
 }
