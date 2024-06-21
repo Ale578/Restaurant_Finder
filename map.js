@@ -18,6 +18,8 @@ let restaurantMarkers = [];
 let restaurantResults;
 const tableBody = document.querySelector('#results tbody');
 
+let highlightedRestaurantId;
+
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
     const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
@@ -43,19 +45,6 @@ async function initMap() {
     });
 }
 
-let radiusSlider = document.querySelector('#radiusSlider');
-let radiusValue = document.querySelector('#radiusValue');
-
-radiusSlider.addEventListener('input', () => {
-
-    radius = parseInt(radiusSlider.value)
-    radiusValue.textContent = radius;
-
-    if (currentCircle) {
-        currentCircle.setRadius(radius)
-    }
-});
-
 let search = document.querySelector('#search');
 
 search.addEventListener('click', () => {
@@ -63,14 +52,12 @@ search.addEventListener('click', () => {
 
         if (!previousSelectedLocation) {
             getRestaurants(service, selectedLocation, radius);
-            // alert("First serach");
+            // alert("First search");
         } else {
             if ((selectedLocation.lat == previousSelectedLocation.lat) 
                 && (selectedLocation.lng == previousSelectedLocation.lng)
                 && (radius == previousRadius)) {
                 alert("You already searched for this");
-
-                // displayResultsTable(results, orderBy)
 
             } else {
                 console.log(radius);
@@ -78,9 +65,9 @@ search.addEventListener('click', () => {
                 console.log(previousSelectedLocation);
                 getRestaurants(service, selectedLocation, radius);
                 // alert("Different search");
-
             }        
         }
+    // Store value of the previous radius
     previousSelectedLocation = selectedLocation;
 
     } else {
@@ -118,6 +105,19 @@ function addCircle(location, radius) {
     });
 }
 
+let radiusSlider = document.querySelector('#radiusSlider');
+let radiusValue = document.querySelector('#radiusValue');
+
+radiusSlider.addEventListener('input', () => {
+
+    radius = parseInt(radiusSlider.value)
+    radiusValue.textContent = radius;
+
+    if (currentCircle) {
+        currentCircle.setRadius(radius)
+    }
+});
+
 // Order results by specified field
 let selectOrderBy = document.querySelectorAll('.order');
 selectOrderBy.forEach(button => {
@@ -132,6 +132,12 @@ selectOrderBy.forEach(button => {
             orderBy = 'price_level';
         }
         displayResultsTable(restaurantResults, orderBy, minimum_rating);
+
+        // Track the highlighted row when the selectOrderBy button is changed
+        const row = document.querySelector(highlightedRestaurantId);
+        if (row) {
+            row.style.backgroundColor = 'yellow';
+        }
     });    
 });
 
@@ -139,7 +145,6 @@ let selectMinimumRating = document.querySelector('#minimumRating');
 
 // Set up filter by minimum rating
 document.addEventListener('DOMContentLoaded', () => {
-
     for (let i = 50; i >= 30; i--) {
         let option = document.createElement('option');
         option.value = (i / 10).toFixed(1);
@@ -156,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
 selectMinimumRating.addEventListener('change', () => {
     minimum_rating = selectMinimumRating.value;
 });
-
 
 function getRestaurants(service, location, radius) {
     // Define the search request
@@ -233,6 +237,7 @@ function displayResultsTable(results, orderBy, minimum_rating) {
         if (place.rating >= minimum_rating) {
 
             const row = tableBody.insertRow();
+            row.id = place.place_id;
 
             const cellName = row.insertCell(0);
             const cellRating = row.insertCell(1);
@@ -269,7 +274,7 @@ function displayResultsMap(results, minimum_rating) {
             const lat = place.geometry.location.lat();
             const lng = place.geometry.location.lng();
 
-            const icon = {
+            const defaultIcon = {
                 path: google.maps.SymbolPath.CIRCLE,
                 fillColor: 'rgba(0, 0, 255, 0.2)',
                 fillOpacity: 0.4,
@@ -283,7 +288,7 @@ function displayResultsMap(results, minimum_rating) {
                 position: { lat: lat, lng: lng },
                 map: map,
                 title: place.name,
-                icon: icon
+                icon: defaultIcon
             });
 
             marker.addListener('click', () => {
@@ -291,7 +296,7 @@ function displayResultsMap(results, minimum_rating) {
                 const highlightedIcon = {
                     path: google.maps.SymbolPath.CIRCLE,
                     fillColor: 'blue',
-                    fillOpacity: 1,    // No transparency
+                    fillOpacity: 1, 
                     scale: 10, 
                     strokeColor: 'blue',
                     strokeWeight: 1
@@ -300,11 +305,24 @@ function displayResultsMap(results, minimum_rating) {
                 // Reset previously highlighted marker
                 restaurantMarkers.forEach((marker) => {
                     if (marker.getIcon().fillColor === highlightedIcon.fillColor) {
-                        marker.setIcon(icon);
+                        marker.setIcon(defaultIcon);
                     }
                 });
 
                 marker.setIcon(highlightedIcon);
+
+                // Highlight the corresponding table row
+                document.querySelectorAll('#results tbody tr').forEach(row => {
+                    row.style.backgroundColor = ''; // Reset all rows
+                });
+                
+                highlightedRestaurantId = `#${place.place_id}`;
+
+                const row = document.querySelector(highlightedRestaurantId);
+                if (row) {
+                    row.style.backgroundColor = 'yellow';
+                }
+
                 // alert(`You clicked on: ${place.name}`);
             });
 
