@@ -20,6 +20,9 @@ const tableBody = document.querySelector('#results tbody');
 
 let highlightedRestaurantId;
 
+let defaultIcon;
+let highlightedIcon;
+
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
     const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
@@ -32,6 +35,24 @@ async function initMap() {
     });
 
     service = new google.maps.places.PlacesService(map);
+
+    defaultIcon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: 'rgba(0, 0, 255, 0.2)',
+        fillOpacity: 0.4,
+        scale: 10, 
+        strokeColor: 'blue',
+        strokeWeight: 1
+    };
+
+    highlightedIcon = {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: 'blue',
+        fillOpacity: 1, 
+        scale: 10, 
+        strokeColor: 'blue',
+        strokeWeight: 1
+    };
 
     map.addListener('click', (event) => {
 
@@ -49,10 +70,10 @@ let search = document.querySelector('#search');
 
 search.addEventListener('click', () => {
     if (currentMarker) {
-
         if (!previousSelectedLocation) {
             getRestaurants(service, selectedLocation, radius);
             // alert("First search");
+
         } else {
             if ((selectedLocation.lat == previousSelectedLocation.lat) 
                 && (selectedLocation.lng == previousSelectedLocation.lng)
@@ -65,11 +86,11 @@ search.addEventListener('click', () => {
                 console.log(previousSelectedLocation);
                 getRestaurants(service, selectedLocation, radius);
                 // alert("Different search");
+                highlightedRestaurantId = null;
             }        
         }
-    // Store value of the previous radius
+    // Store value of the previous location
     previousSelectedLocation = selectedLocation;
-
     } else {
         alert('Select a location')
     }
@@ -107,7 +128,6 @@ function addCircle(location, radius) {
 
 let radiusSlider = document.querySelector('#radiusSlider');
 let radiusValue = document.querySelector('#radiusValue');
-
 radiusSlider.addEventListener('input', () => {
 
     radius = parseInt(radiusSlider.value)
@@ -138,6 +158,7 @@ selectOrderBy.forEach(button => {
         if (row) {
             row.style.backgroundColor = 'yellow';
         }
+
     });    
 });
 
@@ -233,11 +254,11 @@ function displayResultsTable(results, orderBy, minimum_rating) {
     results.sort((a, b) => b[orderBy] - a[orderBy]);
 
     // display the ordered results
-    results.forEach((place) => {
-        if (place.rating >= minimum_rating) {
+    results.forEach((restaurant) => {
+        if (restaurant.rating >= minimum_rating) {
 
             const row = tableBody.insertRow();
-            row.id = place.place_id;
+            row.id = restaurant.place_id;
 
             const cellName = row.insertCell(0);
             const cellRating = row.insertCell(1);
@@ -245,21 +266,40 @@ function displayResultsTable(results, orderBy, minimum_rating) {
             const cellPriceLevel = row.insertCell(3);
             const cellUrl = row.insertCell(4);
 
-            cellName.textContent = place.name;
-            cellRating.textContent = place.rating;
-            cellTotalRatings.textContent = place.user_ratings_total;
+            cellName.textContent = restaurant.name;
+            cellRating.textContent = restaurant.rating;
+            cellTotalRatings.textContent = restaurant.user_ratings_total;
 
-            if (place.price_level == 0) {
+            if (restaurant.price_level == 0) {
                 cellPriceLevel.textContent = 'N/A';
             }
             else {
-                cellPriceLevel.textContent = place.price_level;
+                cellPriceLevel.textContent = restaurant.price_level;
             }
 
-            let placeUrl = `https://www.google.com/maps/place/?q=place_id:${place.place_id}`; 
+            let restaurantUrl = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`; 
 
-            cellUrl.innerHTML = `<a href="${placeUrl}" target="_blank">Google Maps</a>`;
+            cellUrl.innerHTML = `<a href="${restaurantUrl}" target="_blank">Google Maps</a>`;
 
+            // // Add click event listener to the row
+            row.addEventListener('click', () => {
+                // Reset all rows' background color
+                document.querySelectorAll('#results tbody tr').forEach(row => {
+                    row.style.backgroundColor = '';
+                });
+                // Highlight the clicked row
+                row.style.backgroundColor = 'yellow';
+
+                // Highlight the corresponding marker
+                restaurantMarkers.forEach((marker) => {
+                if (marker.getTitle() === restaurant.name) {
+                    marker.setIcon(highlightedIcon);
+                } else {
+                    marker.setIcon(defaultIcon);
+                }
+                });
+                highlightedRestaurantId = `#${restaurant.place_id}`;
+            });
         }
     });
 }
@@ -268,74 +308,27 @@ function displayResultsMap(results, minimum_rating) {
 
     clearRestaurantMarkers()
 
-    results.forEach((place) => {
-        if (place.rating >= minimum_rating) {
+    results.forEach((restaurant) => {
+        if (restaurant.rating >= minimum_rating) {
             // Add restaurantMarkers
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-
-            const defaultIcon = {
-                path: google.maps.SymbolPath.CIRCLE,
-                fillColor: 'rgba(0, 0, 255, 0.2)',
-                fillOpacity: 0.4,
-                scale: 10, 
-                strokeColor: 'blue',
-                strokeWeight: 1
-            };
+            const lat = restaurant.geometry.location.lat();
+            const lng = restaurant.geometry.location.lng();
 
             // Add a marker for each restaurant
             const marker = new google.maps.Marker({
                 position: { lat: lat, lng: lng },
                 map: map,
-                title: place.name,
-                icon: defaultIcon
+                title: restaurant.name,
+                icon: defaultIcon,
+                place_id: restaurant.place_id
             });
 
-            marker.addListener('click', () => {
-
-                const highlightedIcon = {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    fillColor: 'blue',
-                    fillOpacity: 1, 
-                    scale: 10, 
-                    strokeColor: 'blue',
-                    strokeWeight: 1
-                };
-
-                // Reset previously highlighted marker
-                restaurantMarkers.forEach((marker) => {
-                    if (marker.getIcon().fillColor === highlightedIcon.fillColor) {
-                        marker.setIcon(defaultIcon);
-                    }
-                });
-
-                marker.setIcon(highlightedIcon);
-
-                // Highlight the corresponding table row
-                document.querySelectorAll('#results tbody tr').forEach(row => {
-                    row.style.backgroundColor = ''; // Reset all rows
-                });
-                
-                highlightedRestaurantId = `#${place.place_id}`;
-
-                const row = document.querySelector(highlightedRestaurantId);
-                if (row) {
-                    row.style.backgroundColor = 'yellow';
-                }
-
-                // alert(`You clicked on: ${place.name}`);
-            });
-
+            // alert(`You clicked on: ${restaurant.name}`);
             // Store marker in markers array
             restaurantMarkers.push(marker);
         }
     });
-
-    // restaurantMarkers.forEach((marker) => {
-    //     marker.addEventListener('click', () => {
-
-    //     });
-    // });
+    highlightRestaurant();
 }
 
 function clearRestaurantMarkers() {
@@ -343,6 +336,35 @@ function clearRestaurantMarkers() {
         marker.setMap(null);
     });
     restaurantMarkers = [];
+}
+
+function highlightRestaurant() {
+    restaurantMarkers.forEach((restaurant) => {
+        restaurant.addListener('click', () => {
+            // Reset previously highlighted marker
+            restaurantMarkers.forEach((marker) => {
+                if (marker.getIcon().fillColor === highlightedIcon.fillColor) {
+                    marker.setIcon(defaultIcon);
+                }
+            });
+
+            restaurant.setIcon(highlightedIcon);
+
+            // Highlight the corresponding table row
+            document.querySelectorAll('#results tbody tr').forEach(row => {
+                row.style.backgroundColor = ''; // Reset all rows
+            });
+            
+            highlightedRestaurantId = `#${restaurant.place_id}`;
+
+            const row = document.querySelector(highlightedRestaurantId);
+            if (row) {
+                row.style.backgroundColor = 'yellow';
+            }
+        });
+    });
+    
+
 }
 
 let locateMe = document.querySelector('#locateMe');
@@ -372,7 +394,6 @@ locateMe.addEventListener('click', () => {
         console.error('Geolocation is not supported by this browser.');
     }
 });
-
 
 
 // Initialize the map on window load
