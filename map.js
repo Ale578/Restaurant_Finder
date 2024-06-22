@@ -1,6 +1,7 @@
 let map;
-let lat;
-let lng;
+// let lat;
+// let lng;
+
 let currentMarker = null;
 let currentCircle = null;
 let service;
@@ -11,6 +12,8 @@ let previousSelectedLocation;
 let previousRadius = 0;
 
 let minimum_rating = 3.5;
+let previousMinimumRating;
+
 let orderBy = 'rating';
 
 let restaurantMarkers = [];
@@ -80,7 +83,8 @@ search.addEventListener('click', () => {
         } else {
             if ((selectedLocation.lat == previousSelectedLocation.lat) 
                 && (selectedLocation.lng == previousSelectedLocation.lng)
-                && (radius == previousRadius)) {
+                && (radius == previousRadius)
+                && (minimum_rating == previousMinimumRating)) {
                 alert("You already searched for this");
 
             } else {
@@ -94,6 +98,10 @@ search.addEventListener('click', () => {
         }
     // Store value of the previous location
     previousSelectedLocation = selectedLocation;
+
+    // Store value of the previous minimum rating
+    previousMinimumRating = minimumRating;
+
     } else {
         alert('Select a location')
     }
