@@ -153,6 +153,14 @@ selectOrderBy.forEach(button => {
         }
         displayResultsTable(restaurantResults, orderBy, minimum_rating);
 
+        selectOrderBy.forEach((button) => {
+            if (button.style.backgroundColor == 'yellow') {
+                button.style.backgroundColor = 'white';
+            }
+        });
+        
+        button.style.backgroundColor = 'yellow';
+
         // Track the highlighted row when the selectOrderBy button is changed
         const row = document.querySelector(highlightedRestaurantId);
         if (row) {
@@ -281,7 +289,7 @@ function displayResultsTable(results, orderBy, minimum_rating) {
 
             cellUrl.innerHTML = `<a href="${restaurantUrl}" target="_blank">Google Maps</a>`;
 
-            // // Add click event listener to the row
+            // Highlight restaurant row and marker when row is clicked
             row.addEventListener('click', () => {
                 // Reset all rows' background color
                 document.querySelectorAll('#results tbody tr').forEach(row => {
@@ -360,6 +368,7 @@ function highlightRestaurant() {
             const row = document.querySelector(highlightedRestaurantId);
             if (row) {
                 row.style.backgroundColor = 'yellow';
+                row.scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
