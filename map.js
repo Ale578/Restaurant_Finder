@@ -31,7 +31,10 @@ async function initMap() {
     map = new Map(document.getElementById('map'), {
         mapId: '608aeffcc45faef9',
         center: { lat: 40.961613, lng: -5.667607 },
-        zoom: 14
+        zoom: 14,
+        streetViewControl: false,
+        mapTypeControl: false,  
+        fullscreenControl: false,
     });
 
     service = new google.maps.places.PlacesService(map);
@@ -151,16 +154,19 @@ selectOrderBy.forEach(button => {
         } else if (event.target.textContent == 'Price level') {
             orderBy = 'price_level';
         }
-        displayResultsTable(restaurantResults, orderBy, minimum_rating);
 
-        selectOrderBy.forEach((button) => {
-            if (button.style.backgroundColor == 'yellow') {
-                button.style.backgroundColor = 'white';
+        selectOrderBy.forEach((b) => {
+            if (b.style.backgroundColor == 'yellow') {
+                b.style.backgroundColor = 'white';
             }
         });
-        
+
         button.style.backgroundColor = 'yellow';
 
+        displayResultsTable(restaurantResults, orderBy, minimum_rating);
+
+
+        
         // Track the highlighted row when the selectOrderBy button is changed
         const row = document.querySelector(highlightedRestaurantId);
         if (row) {
