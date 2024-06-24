@@ -7,6 +7,8 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     
     <link rel="stylesheet" type="text/css" href="styles.css" />
+
+    <script type='text/javascript' src='config.js'></script>
     <script src="map.js" defer></script>
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 </head>
@@ -15,25 +17,33 @@
         <div id="map"></div>
 
         <div id="options">
-            <button id="search">Search</button>
+            <div>
+                <h4>Order the results by:</h4>
+                <div id="orderBy">
+                    <button class="order" style="background-color: yellow">Rating</button>
+                    <button class="order">Distance</button>
+                    <button class="order">Price level</button>
+                    <button class="order">Number of ratings</button>
+                </div>
 
-            <h4>Order the results by:</h4>
-            <div id="orderBy">
-                <button class="order" id="Rating">Rating</button>
-                <button class="order" id="Distance">Distance</button>
-                <button class="order" id="PriceLevel">Price level</button>
-                <button class="order" id="NumberOfRatings">Number of ratings</button>
+                <h4>The minimum restaurant rating:</h4>
+                <select id="minimumRating"></select>
             </div>
-    
-            <h4>The minimum restaurant rating:</h4>
-            <select id="minimumRating"></select>
 
-            <br>
+            <!-- <div>
+                <input type="text" id="currentLatitude" placeholder="Latitude"></input>
+                <input type="text" id="currentLongitude" placeholder="Longitude"></input>
+            </div>   -->
 
-            <input type="range" id="radiusSlider" min="200" max="1500" value="500" step="100">
-            <span id="radiusValue">500</span> meters
+            <div>
+                <button id="search">Search</button>
 
-            <button id="locateMe">Locate me</button>
+                <!-- style="transform: rotate(-90deg)" -->
+                <input type="range" id="radiusSlider" min="200" max="1500" value="500" step="100">
+                <span id="radiusValue">500</span> meters
+
+                <button id="locateMe">Locate me</button>
+          </div>
         </div>
     </div>
 
@@ -53,10 +63,6 @@
             </tbody>
         </table>
     </div>
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA3nRkuPgmEKK5q5snapu3Frlz19xQWjvU&libraries=places&loading=async&callback=initMap">
-    </script>
 </body>
 </html>
 
-<!-- https://maps.googleapis.com/maps/api/js?key=AIzaSyA3nRkuPgmEKK5q5snapu3Frlz19xQWjvU&libraries=places&callback=initMap" -->

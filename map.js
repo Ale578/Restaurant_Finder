@@ -1,6 +1,16 @@
-let map;
+var mapsApiKey = GOOGLE_MAPS_API_KEY;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async&callback=initMap`;
+    script.async = true;
+    document.body.appendChild(script);
+});
+
 // let lat;
 // let lng;
+
+let map;
 
 let currentMarker = null;
 let currentCircle = null;
@@ -173,8 +183,6 @@ selectOrderBy.forEach(button => {
 
         displayResultsTable(restaurantResults, orderBy, minimum_rating);
 
-
-        
         // Track the highlighted row when the selectOrderBy button is changed
         const row = document.querySelector(highlightedRestaurantId);
         if (row) {
@@ -271,7 +279,7 @@ function displayResultsTable(results, orderBy, minimum_rating) {
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
-
+    
     // Order results based on the user's input, orderBy
     results.sort((a, b) => b[orderBy] - a[orderBy]);
 
