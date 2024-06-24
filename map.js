@@ -1,14 +1,12 @@
-var mapsApiKey = GOOGLE_MAPS_API_KEY;
+const mapsApiKey = GOOGLE_MAPS_API_KEY;
 
+// Get the google API key
 document.addEventListener('DOMContentLoaded', () => {
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async&callback=initMap`;
     script.async = true;
     document.body.appendChild(script);
 });
-
-// let lat;
-// let lng;
 
 let map;
 
@@ -82,15 +80,16 @@ async function initMap() {
     });
 }
 
-let search = document.querySelector('#search');
-
-search.addEventListener('click', () => {
+let searchButton = document.querySelector('#search');
+searchButton.addEventListener('click', () => {
     if (currentMarker) {
+        // Execute if it is a new location
         if (!previousSelectedLocation) {
             getRestaurants(service, selectedLocation, radius);
             // alert("First search");
 
         } else {
+            // Execute if it is the same location with the same radius and minimum rating
             if ((selectedLocation.lat == previousSelectedLocation.lat) 
                 && (selectedLocation.lng == previousSelectedLocation.lng)
                 && (radius == previousRadius)
@@ -98,11 +97,7 @@ search.addEventListener('click', () => {
                 alert("You already searched for this");
 
             } else {
-                console.log(radius);
-                console.log(previousRadius);
-                console.log(previousSelectedLocation);
                 getRestaurants(service, selectedLocation, radius);
-                // alert("Different search");
                 highlightedRestaurantId = null;
             }        
         }
@@ -150,7 +145,6 @@ function addCircle(location, radius) {
 let radiusSlider = document.querySelector('#radiusSlider');
 let radiusValue = document.querySelector('#radiusValue');
 radiusSlider.addEventListener('input', () => {
-
     radius = parseInt(radiusSlider.value)
     radiusValue.textContent = radius;
 
@@ -159,9 +153,37 @@ radiusSlider.addEventListener('input', () => {
     }
 });
 
+let locateMeButton = document.querySelector('#locateMe');
+locateMeButton.addEventListener('click', () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            selectedLocation = {
+                lat: latitude,
+                lng: longitude
+            }
+
+            const { AdvancedMarkerElement } = google.maps.importLibrary('marker');
+
+            map.panTo(selectedLocation);
+            addMarker(selectedLocation, AdvancedMarkerElement);
+            addCircle(selectedLocation, radius);
+          },
+          (error) => {
+            console.error('Error Code = ' + error.code + ' - ' + error.message);
+          }
+        );
+      } 
+    else {
+        console.error('Geolocation is not supported by this browser.');
+    }
+});
+
 // Order results by specified field
-let selectOrderBy = document.querySelectorAll('.order');
-selectOrderBy.forEach(button => {
+let OrderByButtons = document.querySelectorAll('.order');
+OrderByButtons.forEach(button => {
     button.addEventListener('click', event => {
         if (event.target.textContent == 'Rating') {
             orderBy = 'rating';
@@ -172,8 +194,9 @@ selectOrderBy.forEach(button => {
         } else if (event.target.textContent == 'Price level') {
             orderBy = 'price_level';
         }
-
-        selectOrderBy.forEach((b) => {
+        
+        // highlight clicked OrderBy button
+        OrderByButtons.forEach((b) => {
             if (b.style.backgroundColor == 'yellow') {
                 b.style.backgroundColor = 'white';
             }
@@ -192,9 +215,8 @@ selectOrderBy.forEach(button => {
     });    
 });
 
-let selectMinimumRating = document.querySelector('#minimumRating');
-
 // Set up filter by minimum rating
+let MinimumRatingSelector = document.querySelector('#minimumRating');
 document.addEventListener('DOMContentLoaded', () => {
     for (let i = 50; i >= 30; i--) {
         let option = document.createElement('option');
@@ -205,12 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
             option.selected = true;
         }
     
-        selectMinimumRating.appendChild(option);
+        MinimumRatingSelector.appendChild(option);
     }
 });
 
-selectMinimumRating.addEventListener('change', () => {
-    minimum_rating = selectMinimumRating.value;
+MinimumRatingSelector.addEventListener('change', () => {
+    minimum_rating = MinimumRatingSelector.value;
 });
 
 function getRestaurants(service, location, radius) {
@@ -227,9 +249,7 @@ function getRestaurants(service, location, radius) {
 
             for (let i = 0; i < results.length; i++) {
                 const place = results[i];
-        
-                // console.log(`Processing place: ${place.name}`);
-        
+                
                 // Get distance from the selected location to the restaurants
                 const placeLocation = new google.maps.LatLng(
                     place.geometry.location.lat(),
@@ -243,9 +263,7 @@ function getRestaurants(service, location, radius) {
                 
                 const distance = google.maps.geometry.spherical.computeDistanceBetween(selectedLatLng, placeLocation);
                 place.distance = distance * -1;
-        
-                // console.log(`${i}. ${place.name} distance: ${place.distance}`);
-        
+
                 if (!place.price_level) {
                     place.price_level = 0;
                 }   
@@ -274,12 +292,11 @@ function getRestaurants(service, location, radius) {
 }
 
 function displayResultsTable(results, orderBy, minimum_rating) {
-
     // Clear any previous results
     while (tableBody.firstChild) {
         tableBody.removeChild(tableBody.firstChild);
     }
-    
+
     // Order results based on the user's input, orderBy
     results.sort((a, b) => b[orderBy] - a[orderBy]);
 
@@ -353,7 +370,6 @@ function displayResultsMap(results, minimum_rating) {
                 place_id: restaurant.place_id
             });
 
-            // alert(`You clicked on: ${restaurant.name}`);
             // Store marker in markers array
             restaurantMarkers.push(marker);
         }
@@ -382,7 +398,7 @@ function highlightRestaurant() {
 
             // Highlight the corresponding table row
             document.querySelectorAll('#results tbody tr').forEach(row => {
-                row.style.backgroundColor = ''; // Reset all rows
+                row.style.backgroundColor = '';
             });
             
             highlightedRestaurantId = `#${restaurant.place_id}`;
@@ -394,37 +410,7 @@ function highlightRestaurant() {
             }
         });
     });
-    
-
 }
-
-let locateMe = document.querySelector('#locateMe');
-locateMe.addEventListener('click', () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            selectedLocation = {
-                lat: latitude,
-                lng: longitude
-            }
-
-            const { AdvancedMarkerElement } = google.maps.importLibrary('marker');
-
-            map.panTo(selectedLocation);
-            addMarker(selectedLocation, AdvancedMarkerElement);
-            addCircle(selectedLocation, radius);
-          },
-          (error) => {
-            console.error('Error Code = ' + error.code + ' - ' + error.message);
-          }
-        );
-      } 
-    else {
-        console.error('Geolocation is not supported by this browser.');
-    }
-});
 
 
 // Initialize the map on window load
