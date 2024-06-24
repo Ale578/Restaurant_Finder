@@ -75,40 +75,67 @@ async function initMap() {
             lng: event.latLng.lng()
         };
 
-        addMarker(selectedLocation, AdvancedMarkerElement )
+        addMarker(selectedLocation);
         addCircle(selectedLocation, radius);
+
+        // Update coordinates display if user clicks on map
+        latitudeInput.value = selectedLocation.lat;
+        longitudeInput.value = selectedLocation.lng;
     });
 }
 
-let searchButton = document.querySelector('#search');
-searchButton.addEventListener('click', () => {
-    if (currentMarker) {
-        // Execute if it is a new location
-        if (!previousSelectedLocation) {
-            getRestaurants(service, selectedLocation, radius);
-            // alert("First search");
+function submitCoordinateInputs() {
 
-        } else {
-            // Execute if it is the same location with the same radius and minimum rating
-            if ((selectedLocation.lat == previousSelectedLocation.lat) 
-                && (selectedLocation.lng == previousSelectedLocation.lng)
-                && (radius == previousRadius)
-                && (minimum_rating == previousMinimumRating)) {
-                alert("You already searched for this");
+}
+
+let searchButton = document.querySelector('#search');
+let latitudeInput = document.querySelector('#currentLatitude');
+let longitudeInput = document.querySelector('#currentLongitude');
+searchButton.addEventListener('click', () => {
+    // Handle non-numbers and numbers that are out of range for the coordinate inputs
+    if (isNaN(latitudeInput.value) || isNaN(longitudeInput.value) || (-90 > latitudeInput.value || 90 < latitudeInput.value) || (-180 > latitudeInput.value || 180 < latitudeInput.value)) {
+        alert('Invalid coordinates.');
+    } else {
+        // Update selected location if coordinate inputs are changed
+        selectedLocation = {
+            lat: parseFloat(latitudeInput.value),
+            lng: parseFloat(longitudeInput.value)
+        };
+
+        // Change view to selected the location
+        map.setCenter(selectedLocation);
+
+        addMarker(selectedLocation);
+        addCircle(selectedLocation, radius);
+
+        if (currentMarker) {
+            // Execute if it is a new location
+            if (!previousSelectedLocation) {
+                getRestaurants(service, selectedLocation, radius);
+                // alert("First search");
 
             } else {
-                getRestaurants(service, selectedLocation, radius);
-                highlightedRestaurantId = null;
-            }        
+                // Execute if it is the same location with the same radius and minimum rating
+                if ((selectedLocation.lat == previousSelectedLocation.lat) 
+                    && (selectedLocation.lng == previousSelectedLocation.lng)
+                    && (radius == previousRadius)
+                    && (minimum_rating == previousMinimumRating)) {
+                    alert("You already searched for this");
+
+                } else {
+                    getRestaurants(service, selectedLocation, radius);
+                    highlightedRestaurantId = null;
+                }        
+            }
+        // Store value of the previous location
+        previousSelectedLocation = selectedLocation;
+
+        // Store value of the previous minimum rating
+        previousMinimumRating = minimumRating;
+
+        } else {
+            alert('Select a location')
         }
-    // Store value of the previous location
-    previousSelectedLocation = selectedLocation;
-
-    // Store value of the previous minimum rating
-    previousMinimumRating = minimumRating;
-
-    } else {
-        alert('Select a location')
     }
 });
 
@@ -211,7 +238,6 @@ OrderByButtons.forEach(button => {
         if (row) {
             row.style.backgroundColor = 'yellow';
         }
-
     });    
 });
 
