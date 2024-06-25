@@ -41,8 +41,8 @@ async function initMap() {
 
     map = new Map(document.getElementById('map'), {
         mapId: '608aeffcc45faef9',
-        center: { lat: 40.961613, lng: -5.667607 },
-        zoom: 14,
+        center: { lat: 48.8575, lng: 2.3514 },
+        zoom: 12,
         streetViewControl: false,
         mapTypeControl: false,  
         fullscreenControl: false,
@@ -84,60 +84,64 @@ async function initMap() {
     });
 }
 
-function submitCoordinateInputs() {
-
-}
-
-let searchButton = document.querySelector('#search');
 let latitudeInput = document.querySelector('#currentLatitude');
 let longitudeInput = document.querySelector('#currentLongitude');
-searchButton.addEventListener('click', () => {
+function submitCoordinateInputs() {
     // Handle non-numbers and numbers that are out of range for the coordinate inputs
-    if (isNaN(latitudeInput.value) || isNaN(longitudeInput.value) || (-90 > latitudeInput.value || 90 < latitudeInput.value) || (-180 > latitudeInput.value || 180 < latitudeInput.value)) {
+    if (isNaN(latitudeInput.value) || isNaN(longitudeInput.value) || 
+    (-80 > latitudeInput.value || 80 < latitudeInput.value) || 
+    (-180 > longitudeInput.value || 180 < longitudeInput.value)) {
         alert('Invalid coordinates.');
+    } else if (!latitudeInput.value || !longitudeInput.value){
+        return;
+
     } else {
         // Update selected location if coordinate inputs are changed
         selectedLocation = {
             lat: parseFloat(latitudeInput.value),
             lng: parseFloat(longitudeInput.value)
         };
-
         // Change view to selected the location
         map.setCenter(selectedLocation);
 
         addMarker(selectedLocation);
         addCircle(selectedLocation, radius);
+    }
+}
 
-        if (currentMarker) {
-            // Execute if it is a new location
-            if (!previousSelectedLocation) {
-                getRestaurants(service, selectedLocation, radius);
-                // alert("First search");
+let searchButton = document.querySelector('#search');
+searchButton.addEventListener('click', () => {
+    submitCoordinateInputs();
+
+    if (currentMarker) {
+        // Execute if it is a first search
+        if (!previousSelectedLocation) {
+            getRestaurants(service, selectedLocation, radius);
+
+        } else {
+            // Execute if it is the same location, radius and minimum rating as the previous search
+            if ((selectedLocation.lat == previousSelectedLocation.lat) 
+                && (selectedLocation.lng == previousSelectedLocation.lng)
+                && (radius == previousRadius)
+                && (minimum_rating == previousMinimumRating)) {
+                alert("You already searched for this");
 
             } else {
-                // Execute if it is the same location with the same radius and minimum rating
-                if ((selectedLocation.lat == previousSelectedLocation.lat) 
-                    && (selectedLocation.lng == previousSelectedLocation.lng)
-                    && (radius == previousRadius)
-                    && (minimum_rating == previousMinimumRating)) {
-                    alert("You already searched for this");
-
-                } else {
-                    getRestaurants(service, selectedLocation, radius);
-                    highlightedRestaurantId = null;
-                }        
-            }
+                // Execute if it is a new search
+                getRestaurants(service, selectedLocation, radius);
+                highlightedRestaurantId = null;
+            }        
+        }
         // Store value of the previous location
         previousSelectedLocation = selectedLocation;
 
         // Store value of the previous minimum rating
         previousMinimumRating = minimumRating;
 
-        } else {
-            alert('Select a location')
-        }
+    } else {
+        alert('Select a location')
     }
-});
+    });
 
 
 function addMarker(location, AdvancedMarkerElement) {
