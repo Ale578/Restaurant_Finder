@@ -86,31 +86,49 @@ async function initMap() {
 
 let latitudeInput = document.querySelector('#currentLatitude');
 let longitudeInput = document.querySelector('#currentLongitude');
+let previousLatitudeInput = null;
+let previousLongitudeInput = null;
+
 function submitCoordinateInputs() {
+
+    // Check values are not empty
+    if (!latitudeInput.value || !longitudeInput.value) {
+        return;
+    }
+
+    // Check if the values have changed
+    if (latitudeInput.value == previousLatitudeInput && longitudeInput.value == previousLongitudeInput) {
+        return;
+    }
+
     // Handle non-numbers and numbers that are out of range for the coordinate inputs
     if (isNaN(latitudeInput.value) || isNaN(longitudeInput.value) || 
     (-80 > latitudeInput.value || 80 < latitudeInput.value) || 
     (-180 > longitudeInput.value || 180 < longitudeInput.value)) {
         alert('Invalid coordinates.');
-    } else if (!latitudeInput.value || !longitudeInput.value){
         return;
-
-    } else {
-        // Update selected location if coordinate inputs are changed
-        selectedLocation = {
-            lat: parseFloat(latitudeInput.value),
-            lng: parseFloat(longitudeInput.value)
-        };
-        // Change view to selected the location
-        map.setCenter(selectedLocation);
-
-        addMarker(selectedLocation);
-        addCircle(selectedLocation, radius);
     }
+   
+    // Update the previous input values
+    previousLatitudeInput = latitudeInput.value;
+    previousLongitudeInput = longitudeInput.value;
+
+    // Update selected location if coordinate inputs are changed
+    selectedLocation = {
+        lat: parseFloat(latitudeInput.value),
+        lng: parseFloat(longitudeInput.value)
+    };
+    // Change view to selected the location
+    map.setCenter(selectedLocation);
+
+    addMarker(selectedLocation);
+    addCircle(selectedLocation, radius);
 }
+
 
 let searchButton = document.querySelector('#search');
 searchButton.addEventListener('click', () => {
+
     submitCoordinateInputs();
 
     if (currentMarker) {
@@ -123,8 +141,8 @@ searchButton.addEventListener('click', () => {
             if ((selectedLocation.lat == previousSelectedLocation.lat) 
                 && (selectedLocation.lng == previousSelectedLocation.lng)
                 && (radius == previousRadius)
-                && (minimum_rating == previousMinimumRating)) {
-                alert("You already searched for this");
+                && (minimumRating == previousMinimumRating)) {
+                alert('You have already searched for this');
 
             } else {
                 // Execute if it is a new search
