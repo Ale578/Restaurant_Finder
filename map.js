@@ -40,6 +40,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(script);
 });
 
+
+// Update display coordinates when locate me clicked
+
 // Initialize the Map
 async function initMap() {
     const { Map } = await google.maps.importLibrary('maps');
@@ -123,7 +126,7 @@ searchButton.addEventListener('click', () => {
     } else {
         alert('Select a location')
     }
-    });
+});
 
 function getRestaurants(service, location, radius) {
     // Define the search request
@@ -228,6 +231,10 @@ function selectLocationWithCoordinateInputs() {
     (-80 > latitudeInput.value || 80 < latitudeInput.value) || 
     (-180 > longitudeInput.value || 180 < longitudeInput.value)) {
         alert('Invalid coordinates.');
+        selectedLocation = {
+            lat: null,
+            lng: null
+        };
         return;
     }
    
@@ -264,6 +271,10 @@ locateMeButton.addEventListener('click', () => {
             map.panTo(selectedLocation);
             addMarker(selectedLocation, AdvancedMarkerElement);
             addCircle(selectedLocation, radius);
+            
+            // Update coordinates display
+            latitudeInput.value = selectedLocation.lat;
+            longitudeInput.value = selectedLocation.lng;
           },
           (error) => {
             console.error('Error Code = ' + error.code + ' - ' + error.message);
@@ -369,7 +380,7 @@ function displayResultsTable(results, orderBy, minimumRating) {
 
             let restaurantUrl = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`; 
 
-            cellUrl.innerHTML = `<a href="${restaurantUrl}" target="_blank">Google Maps</a>`;
+            cellUrl.innerHTML = `<a href="${restaurantUrl}" target="_blank">G</a>`;
 
             // Highlight restaurant row and marker when row is clicked
             row.addEventListener('click', () => {
