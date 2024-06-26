@@ -1,5 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     display: flex;
+}
+
+html,
+body {
+    height: 100%;
+    /* overflow: hidden; */
+}
+
+.side {
+    background-color: blue;
+    padding: 20px;
+    /* flex-shrink: 1; */
+
+}
+
+#content {
+    box-sizing: border-box;
+    display: flex;
+    background-color: white;
+    flex: 1;
+    /* flex-shrink: 0; */
 }
 
 #map {
@@ -7,11 +34,6 @@ body {
     width: 100%;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-}
 
 #leftPanel {
     position: sticky;
@@ -21,26 +43,66 @@ body {
     align-items: start;
     height: 100vh;
     width: 50%;
+    margin: 20px;
 }
 
 #options {
+    flex-shrink: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
     height: 30%;
+    padding: 20px;
 }
 
+#searchContainer {
+    display: flex;
+    align-self: center;
+    margin-bottom: 10px;
+}
 #search {
-    float: right;
+    padding: 10px;
+    border: 2;
+}
+
+#currentLatitude,
+#currentLongitude {
     padding: 10px;
 }
+#currentLatitude:focus,
+#currentLongitude:focus {
+    outline: none;
+}
 
-#bottomOptions {
+#locateMe {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+#bottomOptionsContainer {
     display: flex;
+    align-items: stretch;
+    height: 100%;
+    flex: 1;
+    /* margin-top: 40px; */
+}
+
+#bottomParametersContainer {
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    
+    /* height: 100%; */
+}
+
+#minimumRatingContainer {
+    /* flex-shrink: 0; */
 }
 
 #rightPanel {
     width: 50%;
+    margin: 20px;
 }
 
 table {

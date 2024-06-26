@@ -13,56 +13,61 @@
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 </head>
 <body>
-    <div id="leftPanel">
-        <div id="map"></div>
+    <div class="side"></div>
+    <div id="content">
+        <div id="leftPanel">
+            <div id="map"></div>
 
-        <div id="options">
-            <div id="topOptions">
-                <input type="text" id="currentLatitude" placeholder="Latitude"></input>
-                <input type="text" id="currentLongitude" placeholder="Longitude"></input>
-                <button id="search">Search</button>
-            </div>  
+            <div id="options">
+                <div id="searchContainer">
+                    <input type="text" id="currentLatitude" placeholder="Latitude"></input>
+                    <input type="text" id="currentLongitude" placeholder="Longitude"></input>
+                    <button id="search">Search</button>
+                </div>  
 
-            <div id="bottomOptions">
-                <div>
-                    <h4>Order the results by:</h4>
+                <button id="locateMe">Locate me</button>
+
+                <div id="bottomOptionsContainer">
+                    <div id="bottomParametersContainer">
+                        <div id="minimumRatingContainer">
+                            <h4>Minimum rating:</h4>
+                            <select id="minimumRating"></select>
+                        </div>
+                    </div>
+
                     <div id="orderBy">
+                        <h4>Order the results by:</h4>
                         <button class="order" style="background-color: yellow">Rating</button>
                         <button class="order">Distance</button>
                         <button class="order">Price level</button>
                         <button class="order">Number of ratings</button>
                     </div>
+                    <div>
+                        <!-- style="transform: rotate(-90deg)" -->
+                        <input type="range" id="radiusSlider" min="200" max="1000" value="500" step="100" style="transform: rotate(-90deg)">
+                        <span id="radiusValue">500</span> meters
+                    </div>
 
-                    <h4>The minimum restaurant rating:</h4>
-                    <select id="minimumRating"></select>
-                </div>
-                <div>
-                    <!-- style="transform: rotate(-90deg)" -->
-                    <input type="range" id="radiusSlider" min="200" max="1500" value="500" step="100">
-                    <span id="radiusValue">500</span> meters
-
-                    <button id="locateMe">Locate me</button>
                 </div>
             </div>
         </div>
-    </div>
-
-
-    <div id="rightPanel">
-        <table id="results">
-            <thead>
-                <tr>
-                    <td>Name</td>
-                    <td>Rating</td>
-                    <td>Number of ratings</td>
-                    <td>Price level</td>
-                    <td>Directions</td>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+        <div id="rightPanel">
+            <table id="results">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Rating</td>
+                        <td>Number of ratings</td>
+                        <td>Price level</td>
+                        <td>Directions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>  
+    <div class="side"></div>
 </body>
 </html>
 
