@@ -34,12 +34,12 @@ body {
     width: 100%;
 }
 
-
 #leftPanel {
     position: sticky;
     top: 0;
     display: flex;
     flex-direction: column;
+
     align-items: start;
     height: 100vh;
     width: 40%;
@@ -47,33 +47,39 @@ body {
 }
 
 #options {
-    flex-shrink: 0;
     width: 100%;
-    display: flex;
-    /* flex-direction: ; */
-    align-items: space-between;
     height: 30%;
+    display: flex;
+    flex-shrink: 1;
+    align-items: space-between;
     padding: 20px;
+    /* flex-flow: row wrap; */
 }
 
 #leftOptionsContainer {
     display: flex;
+    flex-shrink: 1;
     flex-direction: column;
+    /* flex-flow: row wrap; */
 }
 
 #searchContainer {
     display: flex;
     align-self: center;
     margin-bottom: 10px;
+    flex-flow: row wrap;
 }
+
 #search {
     padding: 10px;
     border: 2;
+    flex-grow: 1;
 }
 
 #currentLatitude,
 #currentLongitude {
     padding: 10px;
+    flex-grow: 2;
 }
 #currentLatitude:focus,
 #currentLongitude:focus {
@@ -88,10 +94,7 @@ body {
 
 #bottomOptionsContainer {
     display: flex;
-    /* align-items: stretch; */
-    /* height: 100%; */
     flex: 1;
-    /* margin-top: 40px; */
 }
 
 #bottomParametersContainer {
@@ -102,7 +105,28 @@ body {
 }
 
 #minimumRatingContainer {
-    /* flex-shrink: 0; */
+    flex-shrink: 2;
+}
+
+#orderByContainer {
+    flex-shrink: 3;
+}
+
+#radiusContainer {
+    display: flex;
+    align-items: center;
+}
+
+#radiusSlider {
+    width: 30px;
+    direction: rtl;
+    appearance: slider-vertical;
+
+}
+
+#radiusValue {
+    margin-right: 2px; 
+    
 }
 
 #rightPanel {
@@ -150,3 +174,37 @@ th:nth-child(4), td:nth-child(4) {
 th:nth-child(5), td:nth-child(5) {
     width: 10%;
 }
+
+/* Media Query para dispositivos pequeños */
+/* @media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    #content {
+        flex-direction: column;
+    }
+
+    #leftPanel {
+        width: 100%;
+        margin: 10px;
+    }
+
+    #rightPanel {
+        width: 100%;
+        margin: 10px 10px 10px 0px;
+    }
+
+    #options {
+        flex-direction: column;
+    }
+
+    #bottomOptionsContainer {
+        flex-direction: column;
+    }
+
+    #radiusSlider {
+        width: 100%;
+        direction: ltr;
+    }
+} */
