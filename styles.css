@@ -11,7 +11,7 @@ body {
 html,
 body {
     height: 100%;
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 /* .side {
@@ -52,8 +52,8 @@ body {
     display: flex;
     flex-shrink: 1;
     align-items: space-between;
+    
     padding: 20px;
-    /* flex-flow: row wrap; */
 }
 
 #leftOptionsContainer {
@@ -98,18 +98,17 @@ body {
 }
 
 #bottomParametersContainer {
-    flex: 1;
     display: flex;
-    align-items: stretch;
+    /* align-items: stretch; */
     
 }
 
 #minimumRatingContainer {
-    flex-shrink: 2;
+    /* flex-shrink: 2; */
 }
 
 #orderByContainer {
-    flex-shrink: 3;
+    /* flex-shrink: 3; */
 }
 
 #radiusContainer {
@@ -132,7 +131,7 @@ body {
 #rightPanel {
     width: 60%;
     height: 100%;
-    margin: 20px 20px 20px 0px;
+    margin: 20px 20px 0px 0px;
     overflow-y: auto;
 }
 
