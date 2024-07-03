@@ -7,13 +7,27 @@
 html, body {
     height: 100%;
     width: 100%;
+    min-width: 600px; /* Minimum width */
+    min-height: 400px; /* Minimum height */
+    display: flex;
+
     /* overflow: hidden; */
 }
 
+.side {
+    flex-grow: 1;
+    flex-shrink: 10;
+    flex-basis: 100px;
+    background-color: aquamarine;
+}
+
 #content {
+    flex-grow: 2;
+    flex-shrink: 1;
     display: flex;
     height: 100%;
     width: 100%;
+    /* margin: 0 20px; */
 }
 
 #leftPanel {
@@ -41,7 +55,10 @@ html, body {
 }
 
 #options {
-    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+    min-height: 149px;
 }
 
 #searchContainer {

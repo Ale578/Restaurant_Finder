@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Document</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     
@@ -17,7 +17,6 @@
     <div id="content">
         <div id="leftPanel">
             <div id="map"></div>
-
             <div id="options">
                 <div id="searchContainer">
                     <input type="text" id="currentLatitude" placeholder="Latitude"></input>
@@ -27,27 +26,22 @@
 
                 <button id="locateMe">Locate me</button>
 
-                <div id="bottomOptionsContainer">
-                    <div id="bottomParametersContainer">
-                        <div id="minimumRatingContainer">
-                            <h4>Minimum rating:</h4>
-                            <select id="minimumRating"></select>
-                        </div>
-                    </div>
+                <div id="radiusContainer">
+                    <input type="range" orient="vertical" id="radiusSlider" min="200" max="900" value="500" step="100">
+                    <span id="radiusValue">500 </span>meters
+                </div>
 
-                    <div id="orderBy">
-                        <h4>Order the results by:</h4>
-                        <button class="order" style="background-color: yellow">Rating</button>
-                        <button class="order">Distance</button>
-                        <button class="order">Price level</button>
-                        <button class="order">Number of ratings</button>
-                    </div>
-                    <div>
-                        <!-- style="transform: rotate(-90deg)" -->
-                        <input type="range" id="radiusSlider" min="200" max="1000" value="500" step="100" style="transform: rotate(-90deg)">
-                        <span id="radiusValue">500</span> meters
-                    </div>
+                <div id="minimumRatingContainer">
+                    <h4>Minimum rating:</h4>
+                    <select id="minimumRating"></select>
+                </div>
 
+                <div id="orderByContainer">
+                    <h4>Order the results by:</h4>
+                    <button class="order" style="background-color: yellow">Rating</button>
+                    <button class="order">Distance</button>
+                    <button class="order">Price level</button>
+                    <button class="order">Number of ratings</button>
                 </div>
             </div>
         </div>
@@ -55,18 +49,18 @@
             <table id="results">
                 <thead>
                     <tr>
-                        <td>Name</td>
-                        <td>Rating</td>
-                        <td>Number of ratings</td>
-                        <td>Price level</td>
-                        <td>Directions</td>
+                        <th>Name</th>
+                        <th>Rating</th>
+                        <th>Number of ratings</th>
+                        <th>Price level</th>
+                        <th>Directions</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
         </div>
-    </div>  
+    </div>
     <div class="side"></div>
 </body>
 </html>
