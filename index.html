@@ -13,55 +13,70 @@
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
 </head>
 <body>
-    <div class="side"></div>
-    <div id="content">
-        <div id="leftPanel">
-            <div id="map"></div>
-            <div id="options">
-                <div id="searchContainer">
-                    <input type="text" id="currentLatitude" placeholder="Latitude"></input>
-                    <input type="text" id="currentLongitude" placeholder="Longitude"></input>
-                    <button id="search">Search</button>
-                </div>  
+    <header>
+        <h1>Restaurant Finder</h1>
+        <h2>Results</h2>
+    </header>
 
-                <button id="locateMe">Locate me</button>
+    <div id="main">
+        <div id="content">
+            <!-- <div class="side"></div> -->
+            <div id="leftPanel">
+                <div id="map"></div>
+                <div id="optionsContainer">
+                    <div id="searchContainer">
+                        <input type="text" id="currentLatitude" placeholder="Latitude"></input>
+                        <input type="text" id="currentLongitude" placeholder="Longitude"></input>
+                        <button id="search">Search</button>
+                    </div>  
 
-                <div id="radiusContainer">
-                    <input type="range" orient="vertical" id="radiusSlider" min="200" max="900" value="500" step="100">
-                    <span id="radiusValue">500 </span>meters
-                </div>
+                    <button id="locateMe">Locate me</button>
 
-                <div id="minimumRatingContainer">
-                    <h4>Minimum rating:</h4>
-                    <select id="minimumRating"></select>
-                </div>
+                    <div id="radiusContainer">
+                        <h4>Radius:</h4>
+                        <div>
+                            <input type="range" orient="vertical" id="radiusSlider" min="200" max="900" value="500" step="100">
+                            <span id="radiusValue">500</span>&nbsp;meters
+                        </div>
+                    </div>
 
-                <div id="orderByContainer">
-                    <h4>Order the results by:</h4>
-                    <button class="order" style="background-color: yellow">Rating</button>
-                    <button class="order">Distance</button>
-                    <button class="order">Price level</button>
-                    <button class="order">Number of ratings</button>
+                    <div id="minimumRatingContainer">
+                        <h4>Minimum rating:</h4>
+                        <!-- <select id="minimumRating"></select> -->
+                        <button class="rating">2.5</button>
+                        <button class="rating">3.0</button>
+                        <button class="rating" style="background-color: yellow">3.5</button>
+                        <button class="rating">4.0</button>
+                        <button class="rating">4.5</button>
+                    </div>
+
+                    <div id="orderByContainer">
+                        <h4>Order the results by:</h4>
+                        <button class="order" style="background-color: yellow">Rating</button>
+                        <button class="order">Distance</button>
+                        <button class="order">Price level</button>
+                        <button class="order">Number of ratings</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div id="rightPanel">
-            <table id="results">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Rating</th>
-                        <th>Number of ratings</th>
-                        <th>Price level</th>
-                        <th>Directions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div id="rightPanel">
+                <table id="results">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Rating</th>
+                            <th>Number of ratings</th>
+                            <th>Price level</th>
+                            <th>Directions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        <!-- <div class="side"></div> -->
         </div>
     </div>
-    <div class="side"></div>
 </body>
 </html>
 

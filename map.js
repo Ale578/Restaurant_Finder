@@ -25,6 +25,7 @@ const searchButton = document.querySelector('#search');
 const latitudeInput = document.querySelector('#currentLatitude');
 const longitudeInput = document.querySelector('#currentLongitude');
 const locateMeButton = document.querySelector('#locateMe');
+const minimumRatingButtons = document.querySelectorAll('.rating');
 const orderByButtons = document.querySelectorAll('.order');
 const MinimumRatingSelector = document.querySelector('#minimumRating');
 const radiusSlider = document.querySelector('#radiusSlider');
@@ -271,7 +272,7 @@ locateMeButton.addEventListener('click', () => {
             map.panTo(selectedLocation);
             addMarker(selectedLocation, AdvancedMarkerElement);
             addCircle(selectedLocation, radius);
-            
+
             // Update coordinates display
             latitudeInput.value = selectedLocation.lat;
             longitudeInput.value = selectedLocation.lng;
@@ -295,23 +296,58 @@ radiusSlider.addEventListener('input', () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    for (let i = 50; i >= 30; i--) {
-        let option = document.createElement('option');
-        option.value = (i / 10).toFixed(1);
-        option.text = (i / 10).toFixed(1);
+// document.addEventListener('DOMContentLoaded', () => {
+//     for (let i = 50; i >= 30; i--) {
+//         let option = document.createElement('option');
+//         option.value = (i / 10).toFixed(1);
+//         option.text = (i / 10).toFixed(1);
 
-        if (option.value === '3.5') {
-            option.selected = true;
-        }
+//         if (option.value === '3.5') {
+//             option.selected = true;
+//         }
     
-        MinimumRatingSelector.appendChild(option);
-    }
+//         MinimumRatingSelector.appendChild(option);
+//     }
+// });
+
+// MinimumRatingSelector.addEventListener('change', () => {
+//     minimumRating = MinimumRatingSelector.value;
+// });
+
+minimumRatingButtons.forEach(button => {
+    button.addEventListener('click', event => {
+        if (event.target.textContent == '2.5') {
+            minimumRating = 2.5;
+        } else if (event.target.textContent == '3.0') {
+            minimumRating = 3.0;
+        }else if (event.target.textContent == '3.5') {
+            minimumRating = 3.5;
+        } else if (event.target.textContent == '4.0') {
+            minimumRating = 4.0;
+        } else if (event.target.textContent == '4.5') {
+            minimumRating = 4.5;
+        }
+        
+        // Highlight clicked OrderBy button
+        minimumRatingButtons.forEach((button) => {
+            if (button.style.backgroundColor == 'yellow') {
+                button.style.backgroundColor = 'white';
+            }
+        });
+
+        button.style.backgroundColor = 'yellow';
+
+
+        // Track the highlighted row when the selectOrderBy button is changed
+        const row = document.querySelector(highlightedRestaurantId);
+        if (row) {
+            row.style.backgroundColor = 'yellow';
+        }
+    });    
 });
 
-MinimumRatingSelector.addEventListener('change', () => {
-    minimumRating = MinimumRatingSelector.value;
-});
+
+
 
 // Order results by specified field
 orderByButtons.forEach(button => {
@@ -327,9 +363,9 @@ orderByButtons.forEach(button => {
         }
         
         // Highlight clicked OrderBy button
-        orderByButtons.forEach((b) => {
-            if (b.style.backgroundColor == 'yellow') {
-                b.style.backgroundColor = 'white';
+        orderByButtons.forEach((button) => {
+            if (button.style.backgroundColor == 'yellow') {
+                button.style.backgroundColor = 'white';
             }
         });
 
@@ -378,9 +414,18 @@ function displayResultsTable(results, orderBy, minimumRating) {
                 cellPriceLevel.textContent = restaurant.price_level;
             }
 
-            let restaurantUrl = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`; 
+            let directionsSymbol = document.createElement('img');
+            directionsSymbol.src = 'directions.png';
+            directionsSymbol.alt = 'Directions symbol';
+            directionsSymbol.style.height = '50px';
 
-            cellUrl.innerHTML = `<a href="${restaurantUrl}" target="_blank">G</a>`;
+            let link = document.createElement('a');
+
+            link.appendChild(directionsSymbol);
+
+            link.href = `https://www.google.com/maps/place/?q=place_id:${restaurant.place_id}`; 
+
+            cellUrl.appendChild(link);
 
             // Highlight restaurant row and marker when row is clicked
             row.addEventListener('click', () => {
@@ -456,12 +501,11 @@ function highlightRestaurant() {
             });
             
             highlightedRestaurantId = `#${restaurant.place_id}`;
-
             const row = document.querySelector(highlightedRestaurantId);
-            if (row) {
-                row.style.backgroundColor = 'yellow';
-                row.scrollIntoView({ behavior: 'smooth' });
-            }
+
+            row.style.backgroundColor = 'yellow';
+
+            row.scrollIntoView({ behavior: 'smooth',  top: 20 });
         });
     });
 }
