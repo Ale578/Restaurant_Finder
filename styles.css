@@ -6,12 +6,15 @@
     box-sizing: border-box;
 }
 
-html, body {
+html {
+    height: 100%;
+}
+
+body {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
-    min-width: 600px; 
     min-height: 400px; 
     background-color:rgb(215, 215, 215);
     align-items: center;
@@ -36,7 +39,7 @@ h1 {
     text-align: center;
     flex-shrink: 0;
     max-width: 638px;
-    font-size: 1.4em;
+    font-size: 22px;
 }
 
 h2 {
@@ -44,11 +47,11 @@ h2 {
     flex-shrink: 0;
     width: 65%; 
     max-width: 1548px;
-    font-size: 1.2em;
+    font-size: 19px;
 }
 
-h4 {
-    font-size: 1em;
+h4, th, td, #radiusContainer div {
+    font-size: 14px;
 }
 
 #main {
@@ -56,7 +59,6 @@ h4 {
     justify-content: center;
     width: 100%;
     height: 100%;
-    min-width: 600px;
     min-height: 400px;
 }
 
@@ -85,9 +87,10 @@ h4 {
 }
 
 #map {
-    flex: 1 2 auto;
+    flex: 1 1 auto;
     align-self: center;
     width: 100%;
+    height: 100%;
     min-height: 170px;
     max-height: 600px;
     max-width: 600px;
@@ -133,7 +136,7 @@ h4 {
 #locateMe {
     align-self: center;
     padding: 5px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     cursor: pointer;
 }
 
@@ -257,6 +260,14 @@ th {
     background-color: #f2f2f2;
 }
 
+.longth {
+    display: inline;
+}
+
+.shortth {
+    display: none;
+}
+
 th:nth-child(1), td:nth-child(1) {
     width: 35%;
 }
@@ -280,10 +291,22 @@ td img {
     margin: 0 auto;
 }
 
+/* Use shorter versions of table headers if window is too small*/
+@media (max-width: 1240px) {
+    .longth {
+        display: none;
+    }
+
+    .shortth {
+        display: inline;
+    }
+}
+
  /* For small devices */
-@media (max-width: 751px) {
-    body {
-        flex-direction: column;
+@media (max-width: 1018px) {
+
+    html {
+        height: unset;
     }
 
     h2 {
@@ -295,7 +318,6 @@ td img {
     #content {
         flex-direction: column;
         align-items: center;
-        overflow: scroll;
     }
 
     #mapPanel {
@@ -303,16 +325,15 @@ td img {
         width: 100%;
         max-width: none;
 
-        height: none;
-
-        min-height: 675px;
+        min-height: 570px;
+        
         padding: 20px 20px 0 20px;
 
-        overflow: visible;
+        overflow: unset;
     }
 
     #map {
-        flex: 1 1 auto;
+        flex: 1 0 auto;
         max-width: none;
         min-height: 226px;
     }
@@ -321,15 +342,14 @@ td img {
         flex: 1 1 auto;
         width: 100%;
 
-        overflow-y: visible;
+        overflow-y: unset;
     }
 
     table {
-        overflow: visible;
+        overflow: unset;
 
-        /* table-layout: fixed; */
+        table-layout: fixed;
         border-collapse: collapse;
-
     }
 
     #options {
@@ -340,7 +360,28 @@ td img {
         flex-direction: column;
     }
 
-    #radiusSlider {
+
+    th:nth-child(2), td:nth-child(2) {
+        width: 16.25%;
+    }
+    th:nth-child(3), td:nth-child(3) {
+        width: 16.25%;
+    }
+    th:nth-child(4), td:nth-child(4) {
+        width: 16.25%;
+    }
+    th:nth-child(5), td:nth-child(5) {
+        width: 16.25%;
+    }
+
+    td:nth-child(5) {
+        padding: 0;
+    }
+
+
+
+    td img {
+        transform: scale(0.8);
 
     }
 }
