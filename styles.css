@@ -142,7 +142,7 @@ h4, th, td {
 
 #search {
     cursor: pointer;
-    background-color:rgb(244, 110, 206);
+    background-color:rgb(237, 46, 46);
 
     color: rgb(255, 255, 255);;
 }
@@ -155,7 +155,7 @@ h4, th, td {
     font-size: 12px;
     border: none;
     color:rgb(42, 42, 42);
-    background-color: rgb(255, 181, 234);
+    background-color: rgb(255, 194, 194);
     border-radius: 20px; 
     transition: background-color 0.4s, box-shadow 0.3s;
 
@@ -179,7 +179,7 @@ h4, th, td {
 #radiusSlider {
     margin-right: 10px;
     cursor: pointer;
-    accent-color: rgb(244, 110, 206);
+    accent-color: rgb(237, 46, 46);
 }
 
 #minimumRatingContainer {
