@@ -62,7 +62,7 @@ async function initMap() {
 
     defaultIcon = {
         path: google.maps.SymbolPath.CIRCLE,
-        fillColor: 'rgba(0, 0, 255, 0.2)',
+        fillColor: 'rgb(0, 0, 255, 0.2)',
         fillOpacity: 0.4,
         scale: 10, 
         strokeColor: 'blue',
@@ -195,7 +195,7 @@ function addMarker(location, AdvancedMarkerElement) {
     currentMarker = new google.maps.marker.AdvancedMarkerElement({
         position: location,
         map: map,
-        title: 'Selected Location'
+        title: 'Selected Location',
     });
 }
 
@@ -205,11 +205,11 @@ function addCircle(location, radius) {
     }
 
     currentCircle = new google.maps.Circle({
-        strokeColor: '#FF0000',
+        strokeColor: 'rgb(244, 110, 206)',
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.1,
+        fillColor: 'rgb(244, 110, 206)',
+        fillOpacity: 0.25,
         map: map,
         center: location,
         radius: radius
@@ -296,23 +296,6 @@ radiusSlider.addEventListener('input', () => {
     }
 });
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     for (let i = 50; i >= 30; i--) {
-//         let option = document.createElement('option');
-//         option.value = (i / 10).toFixed(1);
-//         option.text = (i / 10).toFixed(1);
-
-//         if (option.value === '3.5') {
-//             option.selected = true;
-//         }
-    
-//         MinimumRatingSelector.appendChild(option);
-//     }
-// });
-
-// MinimumRatingSelector.addEventListener('change', () => {
-//     minimumRating = MinimumRatingSelector.value;
-// });
 
 minimumRatingButtons.forEach(button => {
     button.addEventListener('click', event => {
@@ -330,18 +313,18 @@ minimumRatingButtons.forEach(button => {
         
         // Highlight clicked OrderBy button
         minimumRatingButtons.forEach((button) => {
-            if (button.style.backgroundColor == 'yellow') {
-                button.style.backgroundColor = 'white';
+            if (button.style.backgroundColor == 'rgb(255, 251, 133)') {
+                button.style.backgroundColor = '#f8f8f8';
             }
         });
 
-        button.style.backgroundColor = 'yellow';
+        button.style.backgroundColor = 'rgb(255, 251, 133)';
 
 
         // Track the highlighted row when the selectOrderBy button is changed
         const row = document.querySelector(highlightedRestaurantId);
         if (row) {
-            row.style.backgroundColor = 'yellow';
+            row.style.backgroundColor = 'rgb(255, 251, 133)';
         }
     });    
 });
@@ -364,19 +347,19 @@ orderByButtons.forEach(button => {
         
         // Highlight clicked OrderBy button
         orderByButtons.forEach((button) => {
-            if (button.style.backgroundColor == 'yellow') {
-                button.style.backgroundColor = 'white';
+            if (button.style.backgroundColor == 'rgb(255, 251, 133)') {
+                button.style.backgroundColor = '#f8f8f8';
             }
         });
 
-        button.style.backgroundColor = 'yellow';
+        button.style.backgroundColor = 'rgb(255, 251, 133)';
 
         displayResultsTable(restaurantResults, orderBy, minimumRating);
 
         // Track the highlighted row when the selectOrderBy button is changed
         const row = document.querySelector(highlightedRestaurantId);
         if (row) {
-            row.style.backgroundColor = 'yellow';
+            row.style.backgroundColor = 'rgb(255, 251, 133)';
         }
     });    
 });
@@ -434,7 +417,7 @@ function displayResultsTable(results, orderBy, minimumRating) {
                     row.style.backgroundColor = '';
                 });
                 // Highlight the clicked row
-                row.style.backgroundColor = 'yellow';
+                row.style.backgroundColor = 'rgb(255, 251, 133)';
 
                 // Highlight the corresponding marker
                 restaurantMarkers.forEach((marker) => {
@@ -503,7 +486,7 @@ function highlightRestaurant() {
             highlightedRestaurantId = `#${restaurant.place_id}`;
             const row = document.querySelector(highlightedRestaurantId);
 
-            row.style.backgroundColor = 'yellow';
+            row.style.backgroundColor = 'rgb(255, 251, 133)';
 
             row.scrollIntoView({ behavior: 'smooth',  top: 20 });
         });
