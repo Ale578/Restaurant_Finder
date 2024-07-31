@@ -205,10 +205,10 @@ function addCircle(location, radius) {
     }
 
     currentCircle = new google.maps.Circle({
-        strokeColor: 'rgb(244, 110, 206)',
+        strokeColor: 'red',
         strokeOpacity: 0.8,
         strokeWeight: 2,
-        fillColor: 'rgb(244, 110, 206)',
+        fillColor: 'red',
         fillOpacity: 0.25,
         map: map,
         center: location,

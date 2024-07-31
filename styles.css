@@ -438,7 +438,6 @@ td img {
         flex-direction: column;
     }
 
-
     th:nth-child(2), td:nth-child(2) {
         width: 15%;
     }
